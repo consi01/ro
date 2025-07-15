@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curtain Reveal Gates</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .gate {
+            position: relative;
+            overflow: hidden;
+            border: 5px solid #333; /* Reverted to original dark gray */
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .curtain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #8B0000;
+            transition: transform 0.5s ease;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .curtain.open {
+            transform: translateY(-100%);
+        }
+
+        .image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="gate" onclick="toggleCurtain(this)">
+            <div class="curtain">Bramka 1</div>
+            <img class="image" src="b.jpg" alt="Image 1">
+        </div>
+        <div class="gate" onclick="toggleCurtain(this)">
+            <div class="curtain">Bramka 2</div>
+            <img class="image" src="m.jpg" alt="Image 2">
+        </div>
+        <div class="gate" onclick="toggleCurtain(this)">
+            <div class="curtain">Bramka 3</div>
+            <img class="image" src="z.jpg" alt="Image 3">
+        </div>
+    </div>
+
+    <script>
+        // Dynamically set gate sizes to 80% of each image's natural dimensions
+        document.querySelectorAll('.gate').forEach(gate => {
+            const img = gate.querySelector('.image');
+            img.onload = () => {
+                const naturalWidth = img.naturalWidth;
+                const naturalHeight = img.naturalHeight;
+                gate.style.width = (naturalWidth * 0.8) + 'px';
+                gate.style.height = (naturalHeight * 0.8) + 'px';
+            };
+            if (img.complete) {
+                img.onload();
+            }
+        });
+
+        let lastOpenedGate = null;
+
+        function toggleCurtain(gate) {
+            const curtain = gate.querySelector('.curtain');
+
+            if (lastOpenedGate && lastOpenedGate !== gate) {
+                const lastCurtain = lastOpenedGate.querySelector('.curtain');
+                lastCurtain.classList.remove('open');
+            }
+
+            curtain.classList.toggle('open');
+            lastOpenedGate = curtain.classList.contains('open') ? gate : null;
+        }
+    </script>
+</body>
+</html>
